@@ -1,0 +1,59 @@
+CREATE DATABASE testdatabase;
+USE testdatabase;
+
+CREATE TABLE person (
+	id INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR(50) NOT NULL,
+	age INT NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE address (
+	id INT NOT NULL AUTO_INCREMENT,
+	person_id INT NOT NULL,
+	street VARCHAR(50) NOT NULL,
+	city VARCHAR(50) NOT NULL,
+	county VARCHAR(50) NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (person_id) REFERENCES person(id)
+);
+
+INSERT INTO person (name, age, email) VALUES
+	('GAVIN', 20, 'GAVIN@atu.ie'),
+	('MARK', 19, 'mark@atu.ie'),
+	('Patrick', 12, 'patrick@atu.ie'),
+	('Dan', 25, 'dan@atu.ie'),
+	('Cillian', 20, 'cillian@atu.ie');
+	
+INSERT INTO address (person_id, street, city, county) VALUES
+	(1, '1 Big St', 'Galway', 'Galway'),
+	(2, '7 Small St', 'Limerick', 'Limerick'),
+	(3, '42 Medium St', 'Cork', 'Cork'),
+	(4, '13 Huge St', 'Dublin', 'Dublin'),
+	(5, '69 Nice St', 'Ballinasloe', 'Galway');
+	
+UPDATE person SET name='Dan', age='29', email='dan@atu.ie' WHERE email='dan@atu.ie';
+
+UPDATE address
+	SET street = 'Dan St', city = 'Galway', county = 'Galway'
+	WHERE person_id = (SELECT id FROM person WHERE email = 'dan@atu.ie');
+
+START TRANSACTION;
+
+
+INSERT INTO person (name, age, email) VALUES ('Billy', '69', 'billy@atu.ie');
+
+
+set @person_id = last_insert_id();
+
+
+INSERT INTO address (person_id, street, city, county) VALUES (@person_id, '2 Tiny Street', 'Galway', 'Galway');
+
+
+COMMIT;
+
+DELETE a from address a where a.id = 6;
+
+
+DELETE p from person p where p.id = 6;
